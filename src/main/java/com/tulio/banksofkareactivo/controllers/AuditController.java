@@ -1,5 +1,7 @@
 package com.tulio.banksofkareactivo.controllers;
 
+import com.tulio.banksofkareactivo.dtos.AuditDepositRequest;
+import com.tulio.banksofkareactivo.dtos.AuditWithdrawalRequest;
 import com.tulio.banksofkareactivo.models.AuditDeposit;
 import com.tulio.banksofkareactivo.models.AuditWithdrawal;
 import com.tulio.banksofkareactivo.services.AuditService;
@@ -21,22 +23,26 @@ public class AuditController {
     // Endpoint para registrar un depósito
     @PostMapping("/deposits")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<AuditDeposit> registerDeposit(@RequestParam String userId,
-                                              @RequestParam Double initialBalance,
-                                              @RequestParam Double depositAmount,
-                                              @RequestParam Double finalBalance) {
-        return auditService.registerDeposit(userId, initialBalance, depositAmount, finalBalance);
+    public Mono<AuditDeposit> registerDeposit(@RequestBody AuditDepositRequest request) {
+        return auditService.registerDeposit(
+                request.getUserId(),
+                request.getInitialBalance(),
+                request.getDepositAmount(),
+                request.getFinalBalance()
+        );
     }
 
     // Endpoint para registrar un retiro
     @PostMapping("/withdrawals")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<AuditWithdrawal> registerWithdrawal(@RequestParam String userId,
-                                                    @RequestParam Double initialBalance,
-                                                    @RequestParam Double withdrawalAmount,
-                                                    @RequestParam String withdrawalType,
-                                                    @RequestParam Double finalBalance) {
-        return auditService.registerWithdrawal(userId, initialBalance, withdrawalAmount, withdrawalType, finalBalance);
+    public Mono<AuditWithdrawal> registerWithdrawal(@RequestBody AuditWithdrawalRequest request) {
+        return auditService.registerWithdrawal(
+                request.getUserId(),
+                request.getInitialBalance(),
+                request.getWithdrawalAmount(),
+                request.getWithdrawalType(),
+                request.getFinalBalance()
+        );
     }
 
     // Endpoint para transmitir depósitos en tiempo real
