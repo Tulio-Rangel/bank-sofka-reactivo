@@ -1,11 +1,10 @@
 package com.tulio.banksofkareactivo.controllers;
 
-import com.tulio.banksofkareactivo.dtos.AuditDepositRequest;
-import com.tulio.banksofkareactivo.dtos.AuditWithdrawalRequest;
-import com.tulio.banksofkareactivo.models.AuditDeposit;
-import com.tulio.banksofkareactivo.models.AuditWithdrawal;
+import com.tulio.banksofkareactivo.dtos.AuditTransactionRequest;
+import com.tulio.banksofkareactivo.models.AuditTransaction;
 import com.tulio.banksofkareactivo.services.AuditService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,11 +22,11 @@ public class AuditController {
     // Endpoint para registrar un depósito
     @PostMapping("/deposits")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<AuditDeposit> registerDeposit(@RequestBody AuditDepositRequest request) {
+    public Mono<AuditTransaction> registerDeposit(@RequestBody AuditTransactionRequest request) {
         return auditService.registerDeposit(
                 request.getUserId(),
                 request.getInitialBalance(),
-                request.getDepositAmount(),
+                request.getAmount(),
                 request.getFinalBalance()
         );
     }
@@ -35,25 +34,18 @@ public class AuditController {
     // Endpoint para registrar un retiro
     @PostMapping("/withdrawals")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<AuditWithdrawal> registerWithdrawal(@RequestBody AuditWithdrawalRequest request) {
+    public Mono<AuditTransaction> registerWithdrawal(@RequestBody AuditTransactionRequest request) {
         return auditService.registerWithdrawal(
                 request.getUserId(),
                 request.getInitialBalance(),
-                request.getWithdrawalAmount(),
-                request.getWithdrawalType(),
+                request.getAmount(),
                 request.getFinalBalance()
         );
     }
 
-    // Endpoint para transmitir depósitos en tiempo real
-    @GetMapping(value = "/deposits/stream", produces = "application/stream+json")
-    public Flux<AuditDeposit> streamDeposits() {
-        return auditService.streamDeposits();
-    }
-
-    // Endpoint para transmitir retiros en tiempo real
-    @GetMapping(value = "/withdrawals/stream", produces = "application/stream+json")
-    public Flux<AuditWithdrawal> streamWithdrawals() {
-        return auditService.streamWithdrawals();
+    // Endpoint para transmitir transacciones en tiempo real
+    @GetMapping(value = "/transactions/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<AuditTransaction> streamTransactions() {
+        return auditService.streamTransactions();
     }
 }

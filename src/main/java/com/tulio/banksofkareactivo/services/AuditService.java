@@ -1,10 +1,7 @@
 package com.tulio.banksofkareactivo.services;
 
-
-import com.tulio.banksofkareactivo.models.AuditDeposit;
-import com.tulio.banksofkareactivo.models.AuditWithdrawal;
-import com.tulio.banksofkareactivo.repositories.AuditDepositRepository;
-import com.tulio.banksofkareactivo.repositories.AuditWithdrawalRepository;
+import com.tulio.banksofkareactivo.models.AuditTransaction;
+import com.tulio.banksofkareactivo.repositories.AuditTransactionRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,39 +12,44 @@ import java.time.LocalDateTime;
 @Service
 public class AuditService {
 
-    private final AuditDepositRepository auditDepositRepository;
-    private final AuditWithdrawalRepository auditWithdrawalRepository;
+    private final AuditTransactionRepository auditTransactionRepository;
 
     // Sinks para transmitir eventos en tiempo real
-    private final Sinks.Many<AuditDeposit> depositSink = Sinks.many().multicast().onBackpressureBuffer();
-    private final Sinks.Many<AuditWithdrawal> withdrawalSink = Sinks.many().multicast().onBackpressureBuffer();
+    private final Sinks.Many<AuditTransaction> transactionSink;
 
-    public AuditService(AuditDepositRepository auditDepositRepository, AuditWithdrawalRepository auditWithdrawalRepository) {
-        this.auditDepositRepository = auditDepositRepository;
-        this.auditWithdrawalRepository = auditWithdrawalRepository;
+    public AuditService(AuditTransactionRepository auditTransactionRepository) {
+        this.auditTransactionRepository = auditTransactionRepository;
+        this.transactionSink = Sinks.many().multicast().onBackpressureBuffer();
     }
 
     // Registrar una auditoría de depósito
-    public Mono<AuditDeposit> registerDeposit(String userId, Double initialBalance, Double depositAmount, Double finalBalance) {
-        AuditDeposit audit = new AuditDeposit(userId, initialBalance, depositAmount, finalBalance, LocalDateTime.now());
-        return auditDepositRepository.save(audit)
-                .doOnNext(depositSink::tryEmitNext); // Emitir el evento en tiempo real
+    public Mono<AuditTransaction> registerDeposit(String userId, Double initialBalance, Double depositAmount, Double finalBalance) {
+        AuditTransaction transaction = new AuditTransaction();
+        transaction.setUserId(userId);
+        transaction.setInitialBalance(initialBalance);
+        transaction.setAmount(depositAmount);
+        transaction.setFinalBalance(finalBalance);
+        transaction.setTransactionType("DEPOSIT");
+        transaction.setDate(LocalDateTime.now());
+        return auditTransactionRepository.save(transaction)
+                .doOnSuccess(transactionSink::tryEmitNext);
     }
 
     // Registrar una auditoría de retiro
-    public Mono<AuditWithdrawal> registerWithdrawal(String userId, Double initialBalance, Double withdrawalAmount, String withdrawalType, Double finalBalance) {
-        AuditWithdrawal audit = new AuditWithdrawal(userId, initialBalance, withdrawalAmount, withdrawalType, finalBalance, LocalDateTime.now());
-        return auditWithdrawalRepository.save(audit)
-                .doOnNext(withdrawalSink::tryEmitNext); // Emitir el evento en tiempo real
+    public Mono<AuditTransaction> registerWithdrawal(String userId, Double initialBalance, Double withdrawalAmount, Double finalBalance) {
+        AuditTransaction transaction = new AuditTransaction();
+        transaction.setUserId(userId);
+        transaction.setInitialBalance(initialBalance);
+        transaction.setAmount(withdrawalAmount);
+        transaction.setFinalBalance(finalBalance);
+        transaction.setTransactionType("WITHDRAWAL");
+        transaction.setDate(LocalDateTime.now());
+        return auditTransactionRepository.save(transaction)
+                .doOnSuccess(transactionSink::tryEmitNext);
     }
 
-    // Flujo de auditorías de depósitos en tiempo real
-    public Flux<AuditDeposit> streamDeposits() {
-        return depositSink.asFlux();
-    }
-
-    // Flujo de auditorías de retiros en tiempo real
-    public Flux<AuditWithdrawal> streamWithdrawals() {
-        return withdrawalSink.asFlux();
+    // Flujo de auditorías en tiempo real
+    public Flux<AuditTransaction> streamTransactions() {
+        return transactionSink.asFlux();
     }
 }

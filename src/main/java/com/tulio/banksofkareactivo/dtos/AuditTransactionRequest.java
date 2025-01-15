@@ -1,17 +1,10 @@
 package com.tulio.banksofkareactivo.dtos;
 
-public class AuditDepositRequest {
+public class AuditTransactionRequest {
     private String userId;
     private Double initialBalance;
-    private Double depositAmount;
+    private Double amount;
     private Double finalBalance;
-
-    public AuditDepositRequest(String userId, Double initialBalance, Double depositAmount, Double finalBalance) {
-        this.userId = userId;
-        this.initialBalance = initialBalance;
-        this.depositAmount = depositAmount;
-        this.finalBalance = finalBalance;
-    }
 
     public String getUserId() {
         return userId;
@@ -29,12 +22,12 @@ public class AuditDepositRequest {
         this.initialBalance = initialBalance;
     }
 
-    public Double getDepositAmount() {
-        return depositAmount;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setDepositAmount(Double depositAmount) {
-        this.depositAmount = depositAmount;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public Double getFinalBalance() {
@@ -45,3 +38,4 @@ public class AuditDepositRequest {
         this.finalBalance = finalBalance;
     }
 }
+

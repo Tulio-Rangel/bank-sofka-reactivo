@@ -1,30 +1,24 @@
 package com.tulio.banksofkareactivo.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "audit_withdrawals")
-public class AuditWithdrawal {
+@Document(collection = "audit_transactions")
+public class AuditTransaction {
 
     @Id
     private String id;
+
     private String userId;
     private Double initialBalance;
-    private Double withdrawalAmount;
-    private String withdrawalType;
+    private Double amount;
     private Double finalBalance;
+    private String transactionType; // "DEPOSIT" o "WITHDRAWAL"// Solo para retiros
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date;
-
-    public AuditWithdrawal(String userId, Double initialBalance, Double withdrawalAmount, String withdrawalType, Double finalBalance, LocalDateTime date) {
-        this.userId = userId;
-        this.initialBalance = initialBalance;
-        this.withdrawalAmount = withdrawalAmount;
-        this.withdrawalType = withdrawalType;
-        this.finalBalance = finalBalance;
-        this.date = date;
-    }
 
     public String getId() {
         return id;
@@ -50,20 +44,12 @@ public class AuditWithdrawal {
         this.initialBalance = initialBalance;
     }
 
-    public Double getWithdrawalAmount() {
-        return withdrawalAmount;
+    public Double getAmount() {
+        return amount;
     }
 
-    public void setWithdrawalAmount(Double withdrawalAmount) {
-        this.withdrawalAmount = withdrawalAmount;
-    }
-
-    public String getWithdrawalType() {
-        return withdrawalType;
-    }
-
-    public void setWithdrawalType(String withdrawalType) {
-        this.withdrawalType = withdrawalType;
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public Double getFinalBalance() {
@@ -74,6 +60,14 @@ public class AuditWithdrawal {
         this.finalBalance = finalBalance;
     }
 
+    public String getTransactionType() {
+        return transactionType;
+    }
+
+    public void setTransactionType(String transactionType) {
+        this.transactionType = transactionType;
+    }
+
     public LocalDateTime getDate() {
         return date;
     }
@@ -82,4 +76,3 @@ public class AuditWithdrawal {
         this.date = date;
     }
 }
-
