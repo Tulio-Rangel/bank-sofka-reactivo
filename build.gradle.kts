@@ -24,7 +24,6 @@ dependencies {
     implementation("io.projectreactor:reactor-core")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
-    testImplementation("de.flapdoodle.embed:de.flapdoodle.embed.mongo")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
