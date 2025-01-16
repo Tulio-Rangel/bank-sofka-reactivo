@@ -15,7 +15,7 @@ public class AuditTransaction {
     private Double initialBalance;
     private Double amount;
     private Double finalBalance;
-    private String transactionType; // "DEPOSIT" o "WITHDRAWAL"//
+    private TransactionType transactionType; // "DEPOSIT" o "WITHDRAWAL"//
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date;
 
@@ -59,11 +59,11 @@ public class AuditTransaction {
         this.finalBalance = finalBalance;
     }
 
-    public String getTransactionType() {
+    public TransactionType getTransactionType() {
         return transactionType;
     }
 
-    public void setTransactionType(String transactionType) {
+    public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
     }
 

@@ -1,6 +1,7 @@
 package com.tulio.banksofkareactivo.services;
 
 import com.tulio.banksofkareactivo.models.AuditTransaction;
+import com.tulio.banksofkareactivo.models.TransactionType;
 import com.tulio.banksofkareactivo.repositories.AuditTransactionRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -29,7 +30,7 @@ public class AuditService {
         transaction.setInitialBalance(initialBalance);
         transaction.setAmount(depositAmount);
         transaction.setFinalBalance(finalBalance);
-        transaction.setTransactionType("DEPOSIT");
+        transaction.setTransactionType(TransactionType.DEPOSIT);
         transaction.setDate(LocalDateTime.now());
         return auditTransactionRepository.save(transaction)
                 .doOnSuccess(transactionSink::tryEmitNext);
@@ -42,7 +43,7 @@ public class AuditService {
         transaction.setInitialBalance(initialBalance);
         transaction.setAmount(withdrawalAmount);
         transaction.setFinalBalance(finalBalance);
-        transaction.setTransactionType("WITHDRAWAL");
+        transaction.setTransactionType(TransactionType.WITHDRAWAL);
         transaction.setDate(LocalDateTime.now());
         return auditTransactionRepository.save(transaction)
                 .doOnSuccess(transactionSink::tryEmitNext);
