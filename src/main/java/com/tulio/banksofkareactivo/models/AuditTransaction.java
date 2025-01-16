@@ -11,12 +11,11 @@ public class AuditTransaction {
 
     @Id
     private String id;
-
     private String userId;
     private Double initialBalance;
     private Double amount;
     private Double finalBalance;
-    private String transactionType; // "DEPOSIT" o "WITHDRAWAL"// Solo para retiros
+    private String transactionType; // "DEPOSIT" o "WITHDRAWAL"//
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date;
 
