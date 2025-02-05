@@ -54,7 +54,7 @@ class AuditServiceTest {
                                 transaction.getInitialBalance().equals(initialBalance) &&
                                 transaction.getAmount().equals(depositAmount) &&
                                 transaction.getFinalBalance().equals(finalBalance) &&
-                                transaction.getTransactionType().equals("DEPOSIT")
+                                transaction.getTransactionType().equals(TransactionType.DEPOSIT)
                 )
                 .verifyComplete();
     }
@@ -84,7 +84,7 @@ class AuditServiceTest {
                                 transaction.getInitialBalance().equals(initialBalance) &&
                                 transaction.getAmount().equals(withdrawalAmount) &&
                                 transaction.getFinalBalance().equals(finalBalance) &&
-                                transaction.getTransactionType().equals("WITHDRAWAL")
+                                transaction.getTransactionType().equals(TransactionType.WITHDRAWAL)
                 )
                 .verifyComplete();
     }
@@ -116,7 +116,7 @@ class AuditServiceTest {
                         .timeout(Duration.ofSeconds(5)))
                 .expectNextMatches(t ->
                         t.getUserId().equals("user123") &&
-                                t.getTransactionType().equals("DEPOSIT")
+                                t.getTransactionType().equals(TransactionType.DEPOSIT)
                 )
                 .verifyComplete();
     }
