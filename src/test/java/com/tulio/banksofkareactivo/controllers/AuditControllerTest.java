@@ -2,11 +2,12 @@ package com.tulio.banksofkareactivo.controllers;
 
 import com.tulio.banksofkareactivo.dtos.AuditTransactionRequest;
 import com.tulio.banksofkareactivo.models.AuditTransaction;
+import com.tulio.banksofkareactivo.models.TransactionType;
 import com.tulio.banksofkareactivo.services.AuditService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -18,12 +19,13 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(AuditController.class)
+@Import(MockConfig.class)
 class AuditControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
-    @MockBean
+    @Autowired
     private AuditService auditService;
 
     @Test
@@ -40,7 +42,7 @@ class AuditControllerTest {
         response.setInitialBalance(request.getInitialBalance());
         response.setAmount(request.getAmount());
         response.setFinalBalance(request.getFinalBalance());
-        response.setTransactionType("DEPOSIT");
+        response.setTransactionType(TransactionType.DEPOSIT);
 
         when(auditService.registerDeposit(
                 anyString(), anyDouble(), anyDouble(), anyDouble()))
@@ -56,7 +58,7 @@ class AuditControllerTest {
                 .expectBody(AuditTransaction.class)
                 .value(transaction -> {
                     assert transaction.getUserId().equals(request.getUserId());
-                    assert transaction.getTransactionType().equals("DEPOSIT");
+                    assert transaction.getTransactionType().equals(TransactionType.DEPOSIT);
                 });
     }
 
@@ -74,7 +76,7 @@ class AuditControllerTest {
         response.setInitialBalance(request.getInitialBalance());
         response.setAmount(request.getAmount());
         response.setFinalBalance(request.getFinalBalance());
-        response.setTransactionType("WITHDRAWAL");
+        response.setTransactionType(TransactionType.WITHDRAWAL);
 
         when(auditService.registerWithdrawal(
                 anyString(), anyDouble(), anyDouble(), anyDouble()))
@@ -90,7 +92,7 @@ class AuditControllerTest {
                 .expectBody(AuditTransaction.class)
                 .value(transaction -> {
                     assert transaction.getUserId().equals(request.getUserId());
-                    assert transaction.getTransactionType().equals("WITHDRAWAL");
+                    assert transaction.getTransactionType().equals(TransactionType.WITHDRAWAL);
                 });
     }
 
@@ -100,7 +102,7 @@ class AuditControllerTest {
         AuditTransaction transaction = new AuditTransaction();
         transaction.setUserId("user123");
         transaction.setAmount(100.0);
-        transaction.setTransactionType("DEPOSIT");
+        transaction.setTransactionType(TransactionType.DEPOSIT);
 
         when(auditService.streamTransactions())
                 .thenReturn(Flux.just(transaction));
@@ -117,7 +119,7 @@ class AuditControllerTest {
                 .as(StepVerifier::create)
                 .expectNextMatches(t ->
                         t.getUserId().equals("user123") &&
-                                t.getTransactionType().equals("DEPOSIT")
+                                t.getTransactionType().equals(TransactionType.DEPOSIT)
                 )
                 .verifyComplete();
     }
