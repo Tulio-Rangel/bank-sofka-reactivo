@@ -2,6 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.4.1"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.sonarqube") version "6.0.1.5171"
 }
 
 group = "com.tulio"
@@ -31,4 +32,13 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+
+sonar {
+    properties {
+        property("sonar.projectKey", "jhonatanls_banksofkareactivo")
+        property("sonar.organization", "jhonatanls")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }

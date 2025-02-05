@@ -1,6 +1,7 @@
 package com.tulio.banksofkareactivo.services;
 
 import com.tulio.banksofkareactivo.models.AuditTransaction;
+import com.tulio.banksofkareactivo.models.TransactionType;
 import com.tulio.banksofkareactivo.repositories.AuditTransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ class AuditServiceTest {
         expectedTransaction.setInitialBalance(initialBalance);
         expectedTransaction.setAmount(depositAmount);
         expectedTransaction.setFinalBalance(finalBalance);
-        expectedTransaction.setTransactionType("DEPOSIT");
+        expectedTransaction.setTransactionType(TransactionType.DEPOSIT);
 
         when(auditTransactionRepository.save(any(AuditTransaction.class)))
                 .thenReturn(Mono.just(expectedTransaction));
@@ -71,7 +72,7 @@ class AuditServiceTest {
         expectedTransaction.setInitialBalance(initialBalance);
         expectedTransaction.setAmount(withdrawalAmount);
         expectedTransaction.setFinalBalance(finalBalance);
-        expectedTransaction.setTransactionType("WITHDRAWAL");
+        expectedTransaction.setTransactionType(TransactionType.WITHDRAWAL);
 
         when(auditTransactionRepository.save(any(AuditTransaction.class)))
                 .thenReturn(Mono.just(expectedTransaction));
@@ -96,7 +97,7 @@ class AuditServiceTest {
         transaction.setInitialBalance(0.0);
         transaction.setAmount(100.0);
         transaction.setFinalBalance(100.0);
-        transaction.setTransactionType("DEPOSIT");
+        transaction.setTransactionType(TransactionType.DEPOSIT);
 
         when(auditTransactionRepository.save(any(AuditTransaction.class)))
                 .thenReturn(Mono.just(transaction));
