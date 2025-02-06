@@ -29,7 +29,7 @@ class AuditServiceTest {
         auditService = new AuditService(auditTransactionRepository);
     }
 
-    private final String GENERATED_USER = "user123";
+    private static final String generatedUser = "user123";
 
     @Test
     void registerDepositShouldCreateAuditTransaction() {
@@ -40,7 +40,7 @@ class AuditServiceTest {
         Double finalBalance = 150.0;
 
         AuditTransaction expectedTransaction = new AuditTransaction();
-        expectedTransaction.setUserId(GENERATED_USER);
+        expectedTransaction.setUserId(generatedUser);
         expectedTransaction.setInitialBalance(initialBalance);
         expectedTransaction.setAmount(depositAmount);
         expectedTransaction.setFinalBalance(finalBalance);
@@ -50,9 +50,9 @@ class AuditServiceTest {
                 .thenReturn(Mono.just(expectedTransaction));
 
         // Act & Assert
-        StepVerifier.create(auditService.registerDeposit(GENERATED_USER, initialBalance, depositAmount, finalBalance))
+        StepVerifier.create(auditService.registerDeposit(generatedUser, initialBalance, depositAmount, finalBalance))
                 .expectNextMatches(transaction ->
-                        transaction.getUserId().equals(GENERATED_USER) &&
+                        transaction.getUserId().equals(generatedUser) &&
                                 transaction.getInitialBalance().equals(initialBalance) &&
                                 transaction.getAmount().equals(depositAmount) &&
                                 transaction.getFinalBalance().equals(finalBalance) &&
@@ -69,7 +69,7 @@ class AuditServiceTest {
         Double finalBalance = 100.0;
 
         AuditTransaction expectedTransaction = new AuditTransaction();
-        expectedTransaction.setUserId(GENERATED_USER);
+        expectedTransaction.setUserId(generatedUser);
         expectedTransaction.setInitialBalance(initialBalance);
         expectedTransaction.setAmount(withdrawalAmount);
         expectedTransaction.setFinalBalance(finalBalance);
@@ -79,9 +79,9 @@ class AuditServiceTest {
                 .thenReturn(Mono.just(expectedTransaction));
 
         // Act & Assert
-        StepVerifier.create(auditService.registerWithdrawal(GENERATED_USER, initialBalance, withdrawalAmount, finalBalance))
+        StepVerifier.create(auditService.registerWithdrawal(generatedUser, initialBalance, withdrawalAmount, finalBalance))
                 .expectNextMatches(transaction ->
-                        transaction.getUserId().equals(GENERATED_USER) &&
+                        transaction.getUserId().equals(generatedUser) &&
                                 transaction.getInitialBalance().equals(initialBalance) &&
                                 transaction.getAmount().equals(withdrawalAmount) &&
                                 transaction.getFinalBalance().equals(finalBalance) &&
@@ -94,7 +94,7 @@ class AuditServiceTest {
     void streamTransactionsShouldEmitTransactions() {
         // Arrange
         AuditTransaction transaction = new AuditTransaction();
-        transaction.setUserId(GENERATED_USER);
+        transaction.setUserId(generatedUser);
         transaction.setInitialBalance(0.0);
         transaction.setAmount(100.0);
         transaction.setFinalBalance(100.0);
@@ -116,7 +116,7 @@ class AuditServiceTest {
                         .thenMany(auditService.streamTransactions().take(1))
                         .timeout(Duration.ofSeconds(5)))
                 .expectNextMatches(t ->
-                        t.getUserId().equals(GENERATED_USER) &&
+                        t.getUserId().equals(generatedUser) &&
                                 t.getTransactionType().equals(TransactionType.DEPOSIT)
                 )
                 .verifyComplete();
