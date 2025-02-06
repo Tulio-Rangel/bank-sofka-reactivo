@@ -36,8 +36,8 @@ jobs:
           args: >
             -Dsonar.java.binaries=build/classes
             -Dsonar.gradle.skipCompile=true
-            -Dsonar.projectKey=jhonatanls_banksofkareactivo
-            -Dsonar.organization=jhonatanls
+            -Dsonar.projectKey=${{vars.PROJECT_KEY}}
+            -Dsonar.organization=${{vars.ORGANIZATION}}
 
   build-and-push:
     runs-on: ubuntu-latest
