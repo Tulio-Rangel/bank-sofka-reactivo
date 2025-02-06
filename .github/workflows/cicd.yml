@@ -70,3 +70,5 @@ jobs:
           tags: |
             ghcr.io/tulio-rangel/bank-sofka-reactive:latest
             ghcr.io/tulio-rangel/bank-sofka-reactive:${{ github.ref_name }}
+          build-args: |
+            DB_URL=${{ secrets.DB_URL }}
