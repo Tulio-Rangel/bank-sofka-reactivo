@@ -29,16 +29,18 @@ class AuditServiceTest {
         auditService = new AuditService(auditTransactionRepository);
     }
 
+    private final String GENERATED_USER = "user123";
+
     @Test
-    void registerDeposit_ShouldCreateAuditTransaction() {
+    void registerDepositShouldCreateAuditTransaction() {
         // Arrange
-        String userId = "user123";
+
         Double initialBalance = 100.0;
         Double depositAmount = 50.0;
         Double finalBalance = 150.0;
 
         AuditTransaction expectedTransaction = new AuditTransaction();
-        expectedTransaction.setUserId(userId);
+        expectedTransaction.setUserId(GENERATED_USER);
         expectedTransaction.setInitialBalance(initialBalance);
         expectedTransaction.setAmount(depositAmount);
         expectedTransaction.setFinalBalance(finalBalance);
@@ -48,9 +50,9 @@ class AuditServiceTest {
                 .thenReturn(Mono.just(expectedTransaction));
 
         // Act & Assert
-        StepVerifier.create(auditService.registerDeposit(userId, initialBalance, depositAmount, finalBalance))
+        StepVerifier.create(auditService.registerDeposit(GENERATED_USER, initialBalance, depositAmount, finalBalance))
                 .expectNextMatches(transaction ->
-                        transaction.getUserId().equals(userId) &&
+                        transaction.getUserId().equals(GENERATED_USER) &&
                                 transaction.getInitialBalance().equals(initialBalance) &&
                                 transaction.getAmount().equals(depositAmount) &&
                                 transaction.getFinalBalance().equals(finalBalance) &&
@@ -60,15 +62,14 @@ class AuditServiceTest {
     }
 
     @Test
-    void registerWithdrawal_ShouldCreateAuditTransaction() {
+    void registerWithdrawalShouldCreateAuditTransaction() {
         // Arrange
-        String userId = "user123";
         Double initialBalance = 150.0;
         Double withdrawalAmount = 50.0;
         Double finalBalance = 100.0;
 
         AuditTransaction expectedTransaction = new AuditTransaction();
-        expectedTransaction.setUserId(userId);
+        expectedTransaction.setUserId(GENERATED_USER);
         expectedTransaction.setInitialBalance(initialBalance);
         expectedTransaction.setAmount(withdrawalAmount);
         expectedTransaction.setFinalBalance(finalBalance);
@@ -78,9 +79,9 @@ class AuditServiceTest {
                 .thenReturn(Mono.just(expectedTransaction));
 
         // Act & Assert
-        StepVerifier.create(auditService.registerWithdrawal(userId, initialBalance, withdrawalAmount, finalBalance))
+        StepVerifier.create(auditService.registerWithdrawal(GENERATED_USER, initialBalance, withdrawalAmount, finalBalance))
                 .expectNextMatches(transaction ->
-                        transaction.getUserId().equals(userId) &&
+                        transaction.getUserId().equals(GENERATED_USER) &&
                                 transaction.getInitialBalance().equals(initialBalance) &&
                                 transaction.getAmount().equals(withdrawalAmount) &&
                                 transaction.getFinalBalance().equals(finalBalance) &&
@@ -90,10 +91,10 @@ class AuditServiceTest {
     }
 
     @Test
-    void streamTransactions_ShouldEmitTransactions() {
+    void streamTransactionsShouldEmitTransactions() {
         // Arrange
         AuditTransaction transaction = new AuditTransaction();
-        transaction.setUserId("user123");
+        transaction.setUserId(GENERATED_USER);
         transaction.setInitialBalance(0.0);
         transaction.setAmount(100.0);
         transaction.setFinalBalance(100.0);
@@ -115,7 +116,7 @@ class AuditServiceTest {
                         .thenMany(auditService.streamTransactions().take(1))
                         .timeout(Duration.ofSeconds(5)))
                 .expectNextMatches(t ->
-                        t.getUserId().equals("user123") &&
+                        t.getUserId().equals(GENERATED_USER) &&
                                 t.getTransactionType().equals(TransactionType.DEPOSIT)
                 )
                 .verifyComplete();
