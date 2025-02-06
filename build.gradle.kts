@@ -22,6 +22,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation ("io.github.cdimascio:dotenv-java:3.0.0")
     implementation("io.projectreactor:reactor-core")
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
     implementation("io.swagger.core.v3:swagger-annotations:2.2.21")
