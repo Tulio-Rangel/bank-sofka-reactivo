@@ -44,7 +44,7 @@ public class AuditController {
     }
 
     // Endpoint para transmitir transacciones en tiempo real
-    @CrossOrigin(origins = "http://localhost:4200")
+    @CrossOrigin(origins = {"http://localhost:4200", "http://banksofka-frontend:80", "http://banksofka-frontend:4200"})
     @GetMapping(value = "/transactions/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<AuditTransaction> streamTransactions() {
         return auditService.streamTransactions();
