@@ -28,13 +28,13 @@ class AuditControllerTest {
     @Autowired
     private AuditService auditService;
 
-    private static final String generatedUser = "user123";
+    private static final String USER = "user123";
 
     @Test
     void registerDepositShouldCreateAuditTransaction() {
         // Arrange
         AuditTransactionRequest request = new AuditTransactionRequest();
-        request.setUserId(generatedUser);
+        request.setUserId(USER);
         request.setInitialBalance(100.0);
         request.setAmount(50.0);
         request.setFinalBalance(150.0);
@@ -68,7 +68,7 @@ class AuditControllerTest {
     void registerWithdrawalShouldCreateAuditTransaction() {
         // Arrange
         AuditTransactionRequest request = new AuditTransactionRequest();
-        request.setUserId(generatedUser);
+        request.setUserId(USER);
         request.setInitialBalance(150.0);
         request.setAmount(50.0);
         request.setFinalBalance(100.0);
@@ -102,7 +102,7 @@ class AuditControllerTest {
     void streamTransactionsShouldStreamAuditTransactions() {
         // Arrange
         AuditTransaction transaction = new AuditTransaction();
-        transaction.setUserId(generatedUser);
+        transaction.setUserId(USER);
         transaction.setAmount(100.0);
         transaction.setTransactionType(TransactionType.DEPOSIT);
 
@@ -120,7 +120,7 @@ class AuditControllerTest {
                 .getResponseBody()
                 .as(StepVerifier::create)
                 .expectNextMatches(t ->
-                        t.getUserId().equals(generatedUser) &&
+                        t.getUserId().equals(USER) &&
                                 t.getTransactionType().equals(TransactionType.DEPOSIT)
                 )
                 .verifyComplete();
