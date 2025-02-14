@@ -25,6 +25,7 @@ dependencies {
     implementation("io.projectreactor:reactor-core")
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
     implementation("io.swagger.core.v3:swagger-annotations:2.2.21")
+    implementation("org.springframework.boot:spring-boot-starter-activemq")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
