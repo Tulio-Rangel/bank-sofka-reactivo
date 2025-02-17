@@ -12,13 +12,15 @@ public class AuditTransaction {
     @Id
     private String id;
     private String userId;
+    private String message;
     private Double initialBalance;
     private Double amount;
     private Double finalBalance;
     private TransactionType transactionType; // "DEPOSIT" o "WITHDRAWAL"//
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime date;
-
+    private String status;
+    
     public String getId() {
         return id;
     }
@@ -73,5 +75,17 @@ public class AuditTransaction {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public String getStatus() { return status; }
+
+    public void setStatus(String status) { this.status = status; }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
